@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 const debug = require('debug')('koa-mongo');
 const genericPool = require('generic-pool');
 
@@ -37,6 +38,7 @@ function mongo(options) {
     return mongoPool.acquire()
       .then(mongo => {
         ctx.mongo = mongo;
+        ctx.mongo.ObjectId = ObjectId;
         debug('Acquire one connection (min: %s, max: %s, poolSize: %s)', options.min, options.max, mongoPool.size);
         return next();
       })
