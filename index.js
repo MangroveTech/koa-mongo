@@ -1,6 +1,7 @@
 'use strict';
 
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId;
 var debug = require('debug')('koa-mongo');
 var poolModule = require('generic-pool');
 
@@ -44,6 +45,8 @@ function mongo(options) {
     this.mongo = yield mongoPool.acquire.bind(mongoPool);
     if (!this.mongo) this.throw('Fail to acquire one mongo connection');
     debug('Acquire one connection (min: %s, max: %s, poolSize: %s)', min, max, mongoPool.getPoolSize());
+
+    this.mongo.ObjectId = ObjectId;
 
     try {
       yield* next;
