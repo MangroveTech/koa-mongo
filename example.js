@@ -9,7 +9,9 @@ app.use(mongo());
 app.use(function* (next) {
   yield this.mongo.db('test').collection('users').insert({ name: 'haha' });
   this.body = yield this.mongo.db('test').collection('users').findOne();
-  this.mongo.db('test').collection('users').remove().then(function (res) {
+  this.mongo.db('test').collection('users').remove({
+    _id: this.mongo.ObjectId(this.body._id)
+  }).then(function (res) {
     console.log(res.result);
   });
 });
