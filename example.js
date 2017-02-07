@@ -9,7 +9,9 @@ app.use(mongo());
 app.use(async (ctx, next) => {
   await ctx.mongo.db('test').collection('users').insert({ name: 'haha' });
   ctx.body = await ctx.mongo.db('test').collection('users').find().toArray();
-  ctx.mongo.db('test').collection('users').remove();
+  ctx.mongo.db('test').collection('users').remove({
+    _id: ctx.body._id
+  });
 });
 app.listen(3000, () => {
   console.log('listening on port 3000');
