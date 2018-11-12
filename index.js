@@ -14,6 +14,8 @@ const defaultOptions = {
 };
 
 function mongo(options) {
+  const mongoSettings = { useNewUrlParser: true };
+
   options = Object.assign({}, defaultOptions, options);
   let mongoUrl = options.uri || options.url;
   if (!mongoUrl) {
@@ -25,7 +27,12 @@ function mongo(options) {
   }
 
   const mongoPool = genericPool.createPool({
-    create: () => MongoClient.connect(mongoUrl, { useNewUrlParser: true }),
+    create: () => MongoClient.connect(mongoUrl, mongoSettings, (err, connection) => {
+        if(err) {
+          throw err;
+        }
+        return connection;
+      }),
     destroy: client => client.close()
   }, options);
 
